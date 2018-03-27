@@ -1,0 +1,98 @@
+import sys
+import time
+
+class Perusona(object):
+    name = ''
+    strength = 0
+    speed = 0
+    magic = 0
+    points = 20
+    persona = ['name', 'strength', 'speed', 'magic', 'points']
+
+    def __init__(self, name):
+        self.name = name
+
+    def add_points(self):
+        valid_attr = ['strength', 'speed', 'magic']
+        dict_valid_attr = dict(enumerate(valid_attr, start= 1))
+        prompt = "\nWhich attribute?\n\t" + "\n\t".join("%d. %s" % n for n in dict_valid_attr.items()) + "\n?"
+        attr = False
+        while attr not in valid_attr:
+            attr = input(prompt)
+            try:
+                attr = dict_valid_attr[int(attr)]
+            except:
+                print("Invalid Input. Type the corresponding Attribute number")
+
+        adding_points = None
+        while type(adding_points) != int or adding_points > self.points:
+            try:
+                adding_points = int(input("How many attribute points will you add?"))
+                assert adding_points <= self.points
+            except AssertionError:
+                print("Not enough attribute points")
+                print("Remaining attribute points = ", self.points)
+            except:
+                print("Invalid value, please, type a whole number")
+
+        self.__setattr__(attr, self.__getattribute__(attr) + adding_points)
+        self.points -= adding_points
+
+    def remove_points(self):
+        valid_attr = ['strength', 'speed', 'magic']
+        dict_valid_attr = dict(enumerate(valid_attr, start= 1))
+        prompt = "\nWhich attribute?\n\t" + "\n\t".join("%d. %s" % n for n in dict_valid_attr.items()) + "\n?"
+        attr = False
+        while attr not in valid_attr:
+            attr = input(prompt)
+            try:
+                attr = dict_valid_attr[int(attr)]
+            except:
+                print("Invalid Input. Type the corresponding Attribute number")
+
+        removing_points = None
+        while type(removing_points) != int or removing_points > self.points:
+            try:
+                removing_points = int(input("How many attribute points will you remove?"))
+                assert removing_points <= self.points
+            except AssertionError:
+                print("Not enough attribute points")
+                print("Remaining attribute points = ", self.points)
+            except:
+                print("Invalid value, please, type a whole number")
+
+        self.__setattr__(attr, self.__getattribute__(attr) - removing_points)
+        self.points += removing_points
+
+    def __str__(self):
+        return "\n".join("%s\t:\t%s" % (i, self.__getattribute__(i)) for i in self.persona)
+
+if __name__ == "__main__":
+    executing = True
+    print("Create your Persona!")
+    time.sleep(2)
+    print("You have 20 Attribute Points to distribute in Strength, Speed or Magic")
+    time.sleep(2)
+    name = ''
+    name = input("Please, enter your Persona's name: ")
+    CHAR = Perusona(name)
+    OPTIONS_LIST = ["Add attr points", "See current Persona", "Remove attr points", "Exit"]
+    OPTIONS_DICT = dict(enumerate(OPTIONS_LIST, start = 1))
+    PROMPT = "\n".join("\t%d. %s" % i for i in OPTIONS_DICT.items()) + "\nChoice:"
+
+    while executing:
+        CHOICE = input(PROMPT)
+        try:
+            CHOICE = int(CHOICE)
+        except:
+            pass
+        if CHOICE in OPTIONS_DICT.keys():
+            CHOICE = OPTIONS_DICT[CHOICE]
+        if CHOICE == "Add attr points":
+            CHAR.add_points()
+        elif CHOICE == "See current Persona":
+            print(CHAR)
+        elif CHOICE == "Remove attr points":
+            CHAR.remove_points()
+        elif CHOICE == "Exit":
+            sys.exit()
